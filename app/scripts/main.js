@@ -159,50 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return String.fromCharCode.apply(this, companyNameCharacters);
         },
 
-        // So we can clear the timeout if user is still typing
-        checkAvailabilityTimeout,
-
-        /**
-         * Check to see if the database name exists
-         * @param databaseName {string} - the database name
-         */
-        checkAvailability = function (databaseName) {
-            elDatabaseNameText.parentNode.querySelector(".help-block").style.display = "none";
-            changeValidationState(elDatabaseNameText.parentNode, validationState.none);
-            if (!databaseName) {
-                elWaiting.style.display = "none";
-                return;
-            }
-            elWaiting.style.display = "block";
-            if (checkAvailabilityTimeout) {
-                clearTimeout(checkAvailabilityTimeout);
-            }
-            checkAvailabilityTimeout = setTimeout(function () {
-                call(host, "DatabaseExists", {
-                    database: databaseName
-                })
-                    .then(function (result) {
-                        changeValidationState(elDatabaseNameText.parentNode, result ? validationState.error : validationState.success);
-                        elDatabaseNameText.parentNode.querySelector(".help-block").style.display = result ? "block" : "none";
-                        elWaiting.style.display = "none";
-                    }, function (err) {
-                        elWaiting.style.display = "none";
-                        changeValidationState(elRegistrationServerText.parentNode, validationState.error);
-                    });
-            }, 600);
-        },
-
-        /**
-         * Update the displayed short database name and check if it's availability
-         * @param companyName
-         */
-        updateShortDatabase = function (companyName) {
-            var databaseNameText = createDatabaseNameFromCompany(companyName),
-                databaseName = databaseNameText.slice(-1) === "_" ? databaseNameText.slice(0, -1) : databaseNameText;
-            elDatabaseNameText.value = databaseNameText;
-            elDatabaseName.value = databaseName;
-            checkAvailability(databaseName);
-        },
 
         // Setup
         /**
@@ -561,7 +517,7 @@ document.addEventListener("DOMContentLoaded", function () {
         elDatabaseNameText.value = "qqq";
         elDatabaseName.value = "qqq";
         elPhoneNumber.value = "qqq";
-        elFleetSize.value = "qqq";
+        elFleetSize.value = "0";
 
         elRegistrationServerText.value = CONFIG.debugDBConfig.host;
         elFirstName.value = "qqq";

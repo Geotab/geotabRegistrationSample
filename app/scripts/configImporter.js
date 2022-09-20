@@ -82,7 +82,8 @@
                     {types: ["rules"], importer: importRules},
                     {types: ["distributionLists"], importer: importGroupsOfEntities, filter: filterRecipients},
                     {types: ["reports"], importer: importReports},
-                    {types: ["misc"], importer: importMiscSettings}
+                    {types: ["misc"], importer: importMiscSettings},
+                    {types: ["addins"], importer: importAddins}
                 ];
                 return new Promise(function(resolve, reject) {
                     importSequence.reduce(function(result, levelImportParams) {
@@ -901,6 +902,17 @@
                         entity: systemSettings
                     });
                 });
+            },
+            importAddins = function (addins) {
+                    var requests = addins[0].data.reduce(function(requests, addin) {
+                        requests.push([
+                            "Add", {
+                                typeName: "AddIn",
+                                entity: addin
+                            }]);
+                        return requests;
+                    }, []);
+                return multiCall(server, requests, credentials);
             };
 
         return {
