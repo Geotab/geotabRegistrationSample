@@ -49,7 +49,7 @@ module.exports = function (grunt) {
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'postcss']
+        tasks: ['newer:copy:styles']
       }
     },
 
@@ -159,26 +159,6 @@ module.exports = function (grunt) {
           src: '{,*/}*.js',
           dest: '.tmp/spec',
           ext: '.js'
-        }]
-      }
-    },
-
-    postcss: {
-      options: {
-        map: true,
-        processors: [
-          // Add vendor prefixed styles
-          require('autoprefixer-core')({
-            browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1']
-          })
-        ]
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
         }]
       }
     },
@@ -415,7 +395,6 @@ module.exports = function (grunt) {
       'clean:server',
       'wiredep',
       'concurrent:server',
-      'postcss',
       'browserSync:livereload',
       'watch'
     ]);
@@ -430,8 +409,7 @@ module.exports = function (grunt) {
     if (target !== 'watch') {
       grunt.task.run([
         'clean:server',
-        'concurrent:test',
-        'postcss'
+        'concurrent:test'
       ]);
     }
 
@@ -445,7 +423,6 @@ module.exports = function (grunt) {
     'clean:dist',
     'wiredep',
     'useminPrepare',
-    'postcss',
     'concat',
     'concurrent:dist',
     'cssmin:dist',
